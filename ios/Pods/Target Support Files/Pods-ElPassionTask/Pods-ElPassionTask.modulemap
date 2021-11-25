@@ -1,0 +1,6 @@
+module Pods_ElPassionTask {
+  umbrella header "Pods-ElPassionTask-umbrella.h"
+
+  export *
+  module * { export * }
+}
