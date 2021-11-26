@@ -11,15 +11,7 @@ type Props = {
 
 const Header = ({}: Props) => {
     return(
-
-            <LinearGradient
-                angle={45}
-                angleCenter={{x: 0.6, y: 0.5}}
-                colors={[GLOBAL_COLORS.secondary, GLOBAL_COLORS.extra]}
-                style={styles.topContainer}
-                useAngle
-            >
-            </LinearGradient>
+        <View></View>
     )
 }
 
