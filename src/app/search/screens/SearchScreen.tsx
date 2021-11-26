@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {SafeAreaView, ScrollView, StyleSheet, View, TextInput, Text} from "react-native";
 import {GLOBAL_COLORS} from "../../ui/const";
 import Button from "../../ui/components/Button";
@@ -7,6 +7,11 @@ import Tile from "../components/Tile";
 
 const SearchScreen = () => {
     const [searchValue, setSearchValue] = useState('');
+
+    useEffect(() => {
+        console.log(searchValue)
+    },[searchValue])
+
     return (
         <SafeAreaView style={styles.mainContainer}>
             <Header/>
@@ -17,11 +22,6 @@ const SearchScreen = () => {
                         value={searchValue}
                         style={styles.textInput}
                         numberOfLines={1}
-                    />
-                    <Button
-                        title={"Szukaj"}
-                        onPress={()=>console.log('sd')}
-                        style={styles.buttonSearch}
                     />
                 </View>
                 <View style={styles.buttonContainer}>
@@ -41,7 +41,7 @@ const SearchScreen = () => {
                 <ScrollView
                     snapToAlignment={'center'}
                     contentContainerStyle={styles.scrollContainer}
-                    style={{width:'100%'}}
+
                 >
                     <Tile/>
                     <Tile/>
@@ -76,8 +76,8 @@ const styles = StyleSheet.create({
         shadowRadius: 1,
     },
     searchContainer:{
-        top: '15%',
-        position: 'absolute',
+        bottom: '30%',
+        elevation:6,
         alignItems: 'center',
         width: '90%',
         backgroundColor: 'white',
@@ -105,8 +105,7 @@ const styles = StyleSheet.create({
     },
     textInput:{
         flex:1,
-        borderBottomLeftRadius: 5,
-        borderTopLeftRadius: 5,
+        borderRadius: 5,
         backgroundColor: 'white',
     },
     buttonSearch:{
@@ -131,22 +130,21 @@ const styles = StyleSheet.create({
         width: '48%',
     },
     bodyContainer: {
-        bottom: 100,
-        width: '92%',
+        bottom: '30%',
+        width: '100%',
         justifyContent: 'center',
     },
     scrollContainer: {
         borderRadius: 10,
-        width: '98%',
-        elevation:5,
-        backgroundColor: 'white',
+        width: '100%',
+        elevation:2,
         shadowOffset: {
             height: 3,
             width: 3,
         },
         shadowOpacity: 0.5,
         shadowRadius: 1,
-        justifyContent: 'center',
+        alignItems: 'center',
     }
 })
 
