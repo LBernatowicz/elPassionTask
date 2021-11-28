@@ -41,11 +41,13 @@ type Props = {
 
 }
 const UserScreen = ({route}: Props) => {
-    const [userData, setUserData] = useState([])
+    const [userData, setUserData] = useState({
+        avatar_url: ''
+    })
     const { title } = route.params;
     console.log(title)
     const getUserByName = async (search: string) => {
-        const url = `https://api.github.com/user/${title}`;
+        const url = `https://api.github.com/user/${search}`;
         try {
             const response = await fetch(
                 url, {
@@ -61,7 +63,7 @@ const UserScreen = ({route}: Props) => {
         }
     };
     useEffect(() => {
-        getUserByName(searchValue)
+        getUserByName(title)
         //requestUserRepos(searchValue)
         //console.log(searchValue)
     },[route])

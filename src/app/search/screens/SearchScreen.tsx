@@ -5,16 +5,15 @@ import Button from "../../ui/components/Button";
 import Header from "../../ui/components/Header";
 import Tile from "../components/Tile";
 import {useNavigation} from "@react-navigation/native";
+import useDebounce from "../../ui/components/Debounce";
 
 const SearchScreen = () => {
+    const [searchData, setSearchData] = useState('');
     const [searchValue, setSearchValue] = useState('');
     const [usersList, setUserList] = useState([])
     const [visableData, setVisableData] = useState([])
+    const debouncedSearchValue = useDebounce(searchValue, 800)
     const navigation = useNavigation()
-
-    // useEffect(() => {
-    //     console.log(searchValue)
-    // },[searchValue])
 
         const getUsers = async () => {
             const url = `https://api.github.com/users?since=1&per_page=100`;
@@ -35,8 +34,11 @@ const SearchScreen = () => {
 
     const handleFilter = (baseArray:any, searchType:string, searchText:string, ) => {
         setVisableData(baseArray.filter((element:any) => element.login.indexOf(searchText) !==-1))
-
     }
+
+    useEffect(() => {
+            setSearchData(debouncedSearchValue)
+        },[debouncedSearchValue])
 
     useEffect(()=> {
         getUsers();
@@ -46,7 +48,7 @@ const SearchScreen = () => {
     useEffect(() => {
         handleFilter(usersList, 'login', searchValue);
         console.log(visableData)
-    },[searchValue])
+    },[searchData])
     return (
         <SafeAreaView style={styles.mainContainer}>
             <Header/>
@@ -78,10 +80,9 @@ const SearchScreen = () => {
                     contentContainerStyle={styles.scrollContainer}
 
                 >
-                    {visableData && visableData.map((item, index) => (
+                    {visableData && visableData.map((item:any) => (
                     <Tile
                         title={item.login}
-                        searchValue={{searchValue}}
                     />
                 ))
                 }

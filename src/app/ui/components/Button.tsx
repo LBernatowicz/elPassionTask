@@ -1,24 +1,22 @@
 import React from 'react'
-import {TouchableOpacity, View, Text, StyleProp, ViewStyle, StyleSheet} from "react-native";
+import {TouchableOpacity, Text, StyleProp, ViewStyle, StyleSheet} from "react-native";
 import LinearGradient from 'react-native-linear-gradient';
 
-import Icon from "./Icon";
-
-import {GLOBAL_COLORS,GLOBAL_FONTS,GLOBAL_FONTSIZES} from "../const";
+import {GLOBAL_COLORS,GLOBAL_FONTSIZES} from "../const";
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 
 
 type Props = {
     title: string,
     onPress(): void,
-    style?(): StyleProp<ViewStyle>,
+    style?: StyleProp<ViewStyle>,
     enabled?: boolean,
     color?: string,
     iconName?: IconProp,
     iconSize?: 18 | 20 | 22 | 26 | 30 | 34 | 38 | 42 | 46 | 50;
 };
 
-const Button = ({title, onPress, enabled, style, color, iconName, iconSize}: Props) => {
+const Button = ({title, onPress, enabled, style, color}: Props) => {
     return(
         <TouchableOpacity
             onPress={onPress}

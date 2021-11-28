@@ -3,6 +3,7 @@ import {SafeAreaView, StyleSheet, Image} from "react-native";
 import {useNavigation} from "@react-navigation/native";
 
 import {GLOBAL_COLORS} from "../../ui/const";
+import any = jasmine.any;
 
 const WelcomeScreen = () => {
     const navigation = useNavigation();

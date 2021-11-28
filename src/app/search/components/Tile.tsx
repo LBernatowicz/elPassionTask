@@ -1,7 +1,6 @@
 import React from 'react'
-import {TouchableOpacity, View, Text, StyleProp, ViewStyle, StyleSheet, Image} from "react-native";
+import {TouchableOpacity, Text, StyleSheet} from "react-native";
 import LinearGradient from 'react-native-linear-gradient';
-import UserScreen from "../screens/UserScreen";
 import {GLOBAL_COLORS} from "../../ui/const";
 import {useNavigation} from "@react-navigation/native";
 
@@ -11,7 +10,6 @@ type Props = {
 
 const Header = ({title}: Props) => {
     const navigation = useNavigation();
-    //console.log(title);
     return(
         <TouchableOpacity
         onPress={()=>{
