@@ -4,6 +4,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 
 import WelcomeScreen from "./app/auth/screens/WelcomeScreen";
 import SearchScreen from "./app/search/screens/SearchScreen";
+import UserScreen from "./app/search/screens/UserScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -17,6 +18,7 @@ const App = () => {
           }}>
               <Stack.Screen name={"Welcome"} component={WelcomeScreen}/>
               <Stack.Screen name={"Search"} component={SearchScreen}/>
+              <Stack.Screen name={"User"} component={UserScreen}/>
           </Stack.Navigator>
       </NavigationContainer>
   );

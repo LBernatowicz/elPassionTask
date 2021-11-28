@@ -4,14 +4,49 @@ import {GLOBAL_COLORS} from "../../ui/const";
 import Button from "../../ui/components/Button";
 import Header from "../../ui/components/Header";
 import Tile from "../components/Tile";
+import {useNavigation} from "@react-navigation/native";
 
 const SearchScreen = () => {
     const [searchValue, setSearchValue] = useState('');
+    const [usersList, setUserList] = useState([])
+    const [visableData, setVisableData] = useState([])
+    const navigation = useNavigation()
+
+    // useEffect(() => {
+    //     console.log(searchValue)
+    // },[searchValue])
+
+        const getUsers = async () => {
+            const url = `https://api.github.com/users?since=1&per_page=100`;
+            try {
+                const response = await fetch(
+                    url, {
+                        method: 'GET',
+                    }
+                )
+                const json = await response.json();
+                setUserList(json);
+
+                console.log(`usersList`, json);
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+    const handleFilter = (baseArray:any, searchType:string, searchText:string, ) => {
+        setVisableData(baseArray.filter((element:any) => element.login.indexOf(searchText) !==-1))
+
+    }
+
+    useEffect(()=> {
+        getUsers();
+        setVisableData(usersList)
+    }, [])
 
     useEffect(() => {
-        console.log(searchValue)
+        handleFilter(usersList, 'login', searchValue);
+        console.log(visableData)
     },[searchValue])
-
     return (
         <SafeAreaView style={styles.mainContainer}>
             <Header/>
@@ -19,7 +54,7 @@ const SearchScreen = () => {
                 <View style={styles.textInputContainer}>
                     <TextInput
                         onChangeText={setSearchValue}
-                        value={searchValue}
+                        value={searchValue.toLowerCase()}
                         style={styles.textInput}
                         numberOfLines={1}
                     />
@@ -27,7 +62,7 @@ const SearchScreen = () => {
                 <View style={styles.buttonContainer}>
                     <Button
                         title={"Users"}
-                        onPress={()=>console.log('das')}
+                        onPress={()=>console.log('asdasd')}
                         style={styles.buttonUsers}
                     />
                     <Button
@@ -43,13 +78,13 @@ const SearchScreen = () => {
                     contentContainerStyle={styles.scrollContainer}
 
                 >
-                    <Tile/>
-                    <Tile/>
-                    <Tile/>
-                    <Tile/>
-                    <Tile/>
-                    <Tile/>
-                    <Tile/>
+                    {visableData && visableData.map((item, index) => (
+                    <Tile
+                        title={item.login}
+                        searchValue={{searchValue}}
+                    />
+                ))
+                }
                 </ScrollView>
             </View>
         </SafeAreaView>

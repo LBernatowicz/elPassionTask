@@ -1,16 +1,23 @@
 import React from 'react'
 import {TouchableOpacity, View, Text, StyleProp, ViewStyle, StyleSheet, Image} from "react-native";
 import LinearGradient from 'react-native-linear-gradient';
-
+import UserScreen from "../screens/UserScreen";
 import {GLOBAL_COLORS} from "../../ui/const";
+import {useNavigation} from "@react-navigation/native";
 
 type Props = {
-
+    title: string
 };
 
-const Header = ({}: Props) => {
+const Header = ({title}: Props) => {
+    const navigation = useNavigation();
+    //console.log(title);
     return(
-        <TouchableOpacity>
+        <TouchableOpacity
+        onPress={()=>{
+            navigation.navigate('User', title);
+        }}
+        >
             <LinearGradient
                 angle={45}
                 angleCenter={{x: 1, y: 0.1}}
@@ -18,7 +25,7 @@ const Header = ({}: Props) => {
                 style={styles.topContainer}
                 useAngle
             >
-                <Text>dasdasdas</Text>
+                <Text>{title}</Text>
             </LinearGradient>
         </TouchableOpacity>
     )
