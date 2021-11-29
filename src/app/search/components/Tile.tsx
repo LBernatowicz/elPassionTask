@@ -1,7 +1,7 @@
 import React from 'react'
-import {TouchableOpacity, Text, StyleSheet} from "react-native";
+import {TouchableOpacity, Text, StyleSheet, View} from "react-native";
 import LinearGradient from 'react-native-linear-gradient';
-import {GLOBAL_COLORS} from "../../ui/const";
+import {GLOBAL_COLORS, GLOBAL_FONTS, GLOBAL_FONTSIZES} from "../../ui/const";
 import {useNavigation} from "@react-navigation/native";
 
 type Props = {
@@ -10,10 +10,11 @@ type Props = {
 
 const Header = ({title}: Props) => {
     const navigation = useNavigation();
+    //console.log(title)
     return(
         <TouchableOpacity
         onPress={()=>{
-            navigation.navigate('User', title);
+            navigation.navigate('User', {title: title});
         }}
         >
             <LinearGradient
@@ -23,7 +24,9 @@ const Header = ({title}: Props) => {
                 style={styles.topContainer}
                 useAngle
             >
-                <Text>{title}</Text>
+                <View style={styles.headerContainer}>
+                    <Text style={styles.headerText}>{title.toUpperCase()}</Text>
+                </View>
             </LinearGradient>
         </TouchableOpacity>
     )
@@ -31,6 +34,7 @@ const Header = ({title}: Props) => {
 
 const styles = StyleSheet.create({
     topContainer:{
+        padding: 5,
         borderRadius: 10,
         width: 350,
         height: 100,
@@ -44,6 +48,14 @@ const styles = StyleSheet.create({
         shadowRadius: 1,
         marginTop: '5%',
     },
+    headerContainer:{
+        width: '100%',
+    },
+    headerText:{
+        fontSize: GLOBAL_FONTSIZES.header,
+        fontWeight: 'bold' as const,
+        letterSpacing: 0.09,
+    }
 })
 
 export default Header;

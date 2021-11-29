@@ -1,5 +1,5 @@
 import React from 'react'
-import {TouchableOpacity, View, Text, StyleProp, ViewStyle, StyleSheet, Image} from "react-native";
+import { StyleSheet, Image} from "react-native";
 import LinearGradient from 'react-native-linear-gradient';
 
 import {GLOBAL_COLORS} from "../const";
@@ -19,13 +19,17 @@ const Header = ({}: Props) => {
                 style={styles.topContainer}
                 useAngle
             >
+                <Image
+                    source={require('../../../assets/images/elPassion-logo.png')}
+                    style={styles.image}
+                />
             </LinearGradient>
     )
 }
 
 const styles = StyleSheet.create({
     topContainer:{
-        bottom:150,
+        bottom:"20%",
         width: 300,
         height: 300,
         borderRadius: 150,
@@ -38,7 +42,21 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 0.5,
         shadowRadius: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
+    image: {
+        width: 70,
+        height: 70,
+        resizeMode: 'stretch',
+        top:"8%",
+        shadowOffset: {
+            height: 1.5,
+            width: 1.5,
+        },
+        shadowOpacity: 0.5,
+        shadowRadius: 1,
+    }
 })
 
 export default Header;

@@ -1,10 +1,8 @@
 import React, {useState, useEffect} from 'react';
 import {SafeAreaView, ScrollView, StyleSheet, View, TextInput, Text} from "react-native";
 import {GLOBAL_COLORS} from "../../ui/const";
-import Button from "../../ui/components/Button";
 import Header from "../../ui/components/Header";
 import Tile from "../components/Tile";
-import {useNavigation} from "@react-navigation/native";
 import useDebounce from "../../ui/components/Debounce";
 
 const SearchScreen = () => {
@@ -12,8 +10,7 @@ const SearchScreen = () => {
     const [searchValue, setSearchValue] = useState('');
     const [usersList, setUserList] = useState([])
     const [visableData, setVisableData] = useState([])
-    const debouncedSearchValue = useDebounce(searchValue, 800)
-    const navigation = useNavigation()
+    const debouncedSearchValue = useDebounce(searchValue, 5000)
 
         const getUsers = async () => {
             const url = `https://api.github.com/users?since=1&per_page=100`;
@@ -25,6 +22,7 @@ const SearchScreen = () => {
                 )
                 const json = await response.json();
                 setUserList(json);
+                setVisableData(json);
 
                 console.log(`usersList`, json);
             } catch (error) {
@@ -32,8 +30,31 @@ const SearchScreen = () => {
             }
         };
 
-    const handleFilter = (baseArray:any, searchType:string, searchText:string, ) => {
-        setVisableData(baseArray.filter((element:any) => element.login.indexOf(searchText) !==-1))
+    const getRepo = async () => {
+        const url = `https://api.github.com/repositories`;
+        try {
+            const response = await fetch(
+                url, {
+                    method: 'GET',
+                }
+            )
+            const json = await response.json();
+            console.log(`repos`, json);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const handleFilter = (baseArray:any, searchType:string, searchText:string) => {
+        let data: any = []
+        setVisableData(baseArray.filter((element: any) => {
+            if(element.login.indexOf(searchText.toLowerCase()) !==-1) {
+                data.push(element)
+            }
+           // console.log('tablica filtracji', data)
+
+        }))
+        setVisableData(data)
     }
 
     useEffect(() => {
@@ -42,35 +63,27 @@ const SearchScreen = () => {
 
     useEffect(()=> {
         getUsers();
-        setVisableData(usersList)
+        getRepo();
     }, [])
 
     useEffect(() => {
-        handleFilter(usersList, 'login', searchValue);
-        console.log(visableData)
+        handleFilter(usersList, 'login', searchData);
+        //console.log(visableData)
     },[searchData])
     return (
         <SafeAreaView style={styles.mainContainer}>
             <Header/>
             <View style={styles.searchContainer}>
+                <View>
+                    <Text>Github search aplication</Text>
+                </View>
                 <View style={styles.textInputContainer}>
                     <TextInput
                         onChangeText={setSearchValue}
-                        value={searchValue.toLowerCase()}
+                        value={searchValue}
                         style={styles.textInput}
                         numberOfLines={1}
-                    />
-                </View>
-                <View style={styles.buttonContainer}>
-                    <Button
-                        title={"Users"}
-                        onPress={()=>console.log('asdasd')}
-                        style={styles.buttonUsers}
-                    />
-                    <Button
-                        title={"Respo"}
-                        onPress={()=>console.log('das')}
-                        style={styles.buttonRespo}
+                        placeholder={'Search login or respo'}
                     />
                 </View>
             </View>
@@ -78,12 +91,12 @@ const SearchScreen = () => {
                 <ScrollView
                     snapToAlignment={'center'}
                     contentContainerStyle={styles.scrollContainer}
-
+                    showsVerticalScrollIndicator={false}
                 >
                     {visableData && visableData.map((item:any) => (
-                    <Tile
-                        title={item.login}
-                    />
+                        <Tile
+                            title={item.login}
+                        />
                 ))
                 }
                 </ScrollView>
@@ -115,6 +128,7 @@ const styles = StyleSheet.create({
         bottom: '30%',
         elevation:6,
         alignItems: 'center',
+        justifyContent: 'center',
         width: '90%',
         backgroundColor: 'white',
         shadowOffset: {

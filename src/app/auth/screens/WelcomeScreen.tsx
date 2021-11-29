@@ -3,7 +3,6 @@ import {SafeAreaView, StyleSheet, Image} from "react-native";
 import {useNavigation} from "@react-navigation/native";
 
 import {GLOBAL_COLORS} from "../../ui/const";
-import any = jasmine.any;
 
 const WelcomeScreen = () => {
     const navigation = useNavigation();
@@ -35,7 +34,12 @@ const styles = StyleSheet.create({
         width: 200,
         height: 200,
         resizeMode: 'stretch',
+        shadowOffset: {
+            height: 3,
+            width: 3,
+        },
+        shadowOpacity: 0.5,
+        shadowRadius: 1,
     },
-
 })
 export default WelcomeScreen;
