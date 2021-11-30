@@ -6,7 +6,6 @@ import Tile from "../components/Tile";
 import useDebounce from "../../ui/components/Debounce";
 
 const SearchScreen = () => {
-    const [searchData, setSearchData] = useState('');
     const [searchValue, setSearchValue] = useState('');
     const [usersList, setUserList] = useState([]);
     const [reposList, setReposList] = useState([]);
@@ -17,23 +16,23 @@ const SearchScreen = () => {
     const [isLoadedRepos, setIsLoadedRepos] = useState(false)
     const debouncedSearchValue = useDebounce(searchValue, 800)
 
-        const getUsers = async () => {
-            const url = `https://api.github.com/users?since=1&per_page=100`;
-            try {
-                const response = await fetch(
-                    url, {
-                        method: 'GET',
-                    }
-                )
-                const json = await response.json();
-                setUserList(json);
-                setVisableUserData(json);
-                setIsLoadedUsers(true)
-                console.log(json)
-            } catch (error) {
-                console.error(error);
-            }
-        };
+    const getUsers = async () => {
+        const url = `https://api.github.com/users?since=1&per_page=100`;
+        try {
+            const response = await fetch(
+                url, {
+                    method: 'GET',
+                }
+            )
+            const json = await response.json();
+            setUserList(json);
+            setVisableUserData(json);
+            setIsLoadedUsers(true)
+            // console.log(json)
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
     const getRepo = async () => {
         const url = `https://api.github.com/repositories?per_page=100`;
@@ -47,7 +46,7 @@ const SearchScreen = () => {
             setReposList(json)
             setVisableReposData(json)
             setIsLoadedRepos(true)
-            console.log(json)
+            // console.log(json)
         } catch (error) {
             console.error(error);
         }
@@ -56,23 +55,23 @@ const SearchScreen = () => {
     const handleFilter = (baseArray:Array<object>, searchType:string, searchText:string, setState: Function) => {
         let data: any = []
         baseArray.filter((element: any) => {
-                if (element[searchType].indexOf(searchText.toLowerCase()) !== -1) {
-                    data.push(element)
-                }
+            if (element[searchType].indexOf(searchText.toLowerCase()) !== -1) {
+                data.push(element)
+            }
         })
         setState(data)
-        //console.log('data', data)
+        // console.log('data', data)
     }
 
     const handleConcat = (arr1: Array<object>, arr2: Array<object>) => {
         const data = [...arr1, ...arr2];
         setVisableData(data)
-        console.log('concat', data)
+        // console.log('concat', data)
     }
 
     useEffect(() => {
-            setSearchData(debouncedSearchValue)
-        },[debouncedSearchValue])
+        console.log(debouncedSearchValue)
+    },[debouncedSearchValue])
 
     useEffect(()=> {
         getUsers();
@@ -80,15 +79,18 @@ const SearchScreen = () => {
     }, [])
 
     useEffect(() => {
-         handleConcat(visableUserData, visableReposData);
+        if (isLoadedUsers && isLoadedRepos) handleConcat(visableUserData, visableReposData);
     },[isLoadedUsers, isLoadedRepos])
 
     useEffect(() => {
-        handleFilter(usersList, 'login', searchData, setVisableUserData);
-        handleFilter(reposList, 'name', searchData, setVisableReposData);
+        handleFilter(usersList, 'login', debouncedSearchValue, setVisableUserData);
+        handleFilter(reposList, 'name', debouncedSearchValue, setVisableReposData);
+        console.log(visableData)
+    },[debouncedSearchValue])
+
+    useEffect(() => {
         handleConcat(visableUserData, visableReposData);
-        console.log(visableUserData.length)
-    },[searchData])
+    },[visableReposData])
 
     return (
         <SafeAreaView style={styles.mainContainer}>
@@ -119,8 +121,8 @@ const SearchScreen = () => {
                             id={item.id}
                             user={!!item.login }
                         />
-                ))
-                }
+                    ))
+                    }
                 </ScrollView>
             </View>
         </SafeAreaView>
