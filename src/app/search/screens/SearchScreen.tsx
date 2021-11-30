@@ -28,7 +28,6 @@ const SearchScreen = () => {
             setUserList(json);
             setVisableUserData(json);
             setIsLoadedUsers(true)
-            // console.log(json)
         } catch (error) {
             console.error(error);
         }
@@ -46,7 +45,6 @@ const SearchScreen = () => {
             setReposList(json)
             setVisableReposData(json)
             setIsLoadedRepos(true)
-            // console.log(json)
         } catch (error) {
             console.error(error);
         }
@@ -60,13 +58,12 @@ const SearchScreen = () => {
             }
         })
         setState(data)
-        // console.log('data', data)
+
     }
 
     const handleConcat = (arr1: Array<object>, arr2: Array<object>) => {
-        const data = [...arr1, ...arr2];
+        const data = [...arr1, ...arr2].sort((arr1, arr2) => arr1.id-arr2.id);
         setVisableData(data)
-        // console.log('concat', data)
     }
 
     useEffect(() => {
@@ -115,9 +112,10 @@ const SearchScreen = () => {
                     contentContainerStyle={styles.scrollContainer}
                     showsVerticalScrollIndicator={false}
                 >
-                    {visableData && visableData.map((item:any) => (
+                    {visableData && visableData.map((item:any, index: number) => (
                         <Tile
-                            title={item.login ? item.login : 'dupa'}
+                            key={index}
+                            title={item.login ? item.login : item.name ? item.name : ''}
                             id={item.id}
                             user={!!item.login }
                         />

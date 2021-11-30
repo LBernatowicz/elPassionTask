@@ -10,12 +10,12 @@ type Props = {
     user: boolean
 };
 
-const Header = ({title, id}: Props) => {
+const Header = ({title, id, user}: Props) => {
     const navigation = useNavigation();
     return(
         <TouchableOpacity
         onPress={()=>{
-            navigation.navigate('User', {title: title});
+            navigation.navigate('User', {title: title, user: user});
         }}
         >
             <LinearGradient
@@ -26,8 +26,17 @@ const Header = ({title, id}: Props) => {
                 useAngle
             >
                 <View style={styles.headerContainer}>
+                    <View style={styles.textView}>
+                        <Text style={styles.headerText}>
+                            {user ? 'User' : 'Repos'}
+                        </Text>
+                    </View>
+                    <View style={styles.textView}>
                     <Text style={styles.headerText}>{title.toUpperCase()}</Text>
+                    </View>
+                    <View style={styles.textView}>
                     <Text style={styles.headerText}>{id}</Text>
+                    </View>
                 </View>
             </LinearGradient>
         </TouchableOpacity>
@@ -49,14 +58,23 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.5,
         shadowRadius: 1,
         marginTop: '5%',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     headerContainer:{
+        flexDirection: 'row',
+        justifyContent:'space-between',
+        alignItems: 'center',
         width: '100%',
     },
     headerText:{
         fontSize: GLOBAL_FONTSIZES.header,
         fontWeight: 'bold' as const,
         letterSpacing: 0.09,
+        textAlign: 'center',
+    },
+    textView: {
+        flex:1,
     }
 })
 

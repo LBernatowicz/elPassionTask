@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {SafeAreaView, StyleSheet, View, Image, Text} from "react-native";
+import {SafeAreaView, ScrollView, StyleSheet, View, Image,} from "react-native";
 import Header from "../../ui/components/Header";
 import Button from "../../ui/components/Button";
 import {useNavigation} from "@react-navigation/native";
@@ -10,16 +10,17 @@ type Props = {
 }
 const AccountScreen = ({route}: Props) => {
     const navigation = useNavigation();
-    const [userData, setUserData] = useState({
+    const [data, setData] = useState({
         avatar_url: '.',
         name: '.',
         followers: '.',
         blog: '.',
         email: '.',
         company: '.',
+        full_name: '.',
+        description: '.',
     });
-    const { title } = route.params;
-    console.log(title)
+    const { title, user, id } = route.params;
     const getUserByName = async (search: string) => {
         const url = `https://api.github.com/users/${search}`;
         try {
@@ -29,54 +30,90 @@ const AccountScreen = ({route}: Props) => {
                 }
             )
             const json = await response.json();
-            setUserData(json);
+            setData(json);
             console.log(`odpowiedz`, json);
         } catch (error) {
             console.error(error);
         }
     };
 
+    const getReposByName = async (id: string) => {
+        const url = `https://api.github.com/repositories?${id}`;
+        try {
+            const response = await fetch(
+                url, {
+                    method: 'GET',
+                }
+            )
+            const json = await response.json();
+            setData(json[0]);
+            console.log(`odpowiedz`, json);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+
     useEffect(() => {
-        getUserByName(title)
-        console.log(userData.avatar_url)
+        if(user){
+            getUserByName(title)
+        } else getReposByName(id)
     },[])
 
     return (
         <SafeAreaView style={styles.mainContainer}>
             <Header/>
-            <View style={styles.logoContainer}>
-               <Image source={{uri: userData.avatar_url}}
-                    style={styles.image}
-               />
-            </View>
+            {user ?
+            (<View style={styles.logoContainer}>
+                <Image source={{uri: data.avatar_url}}
+                       style={styles.image}
+                />
+            </View>) : (<View style={styles.disabledLogoContainer}></View>)
+            }
             <View style={styles.bodyContainer}>
-                <View style={styles.contentContainer}>
+                <ScrollView style={styles.contentContainer}>
                     <TextField
-                        labelValue={userData.name ? userData.name : '-'}
+                        labelValue={data.name ? data.name : '-'}
                         title={'Name'}
                         disable={false}
                     />
-                    <TextField
-                        labelValue={userData.followers.toString() ? userData.followers.toString() : '-'}
+                    {user ?
+                    (<TextField
+                        labelValue={data.followers.toString() ? data.followers.toString() : '-'}
                         title={'Followers'}
                         disable={false}
                     />
+                    ) : (
+                            <TextField
+                                labelValue={data.description ? data.description : '-'}
+                                title={'Description'}
+                                disable={false}
+                            />
+                        ) }
                     <TextField
-                        labelValue={userData.blog ? userData.blog : '-'}
+                        labelValue={data.blog ? data.blog : '-'}
                         title={'Blog'}
                         disable={false}
                     />
                     <TextField
-                        labelValue={userData.email ? userData.email : '-'}
+                        labelValue={data.email ? data.email : '-'}
                         title={'E-mail'}
                         disable={false}
                     />
-                    <TextField
-                        labelValue={userData.company ? userData.company : '-'}
-                        title={'Comapny'}
-                        disable={false}
-                    />
-                </View>
+                    {user ?
+                        (<TextField
+                                labelValue={data.company ? data.company : '-'}
+                                title={'Company'}
+                                disable={false}
+                            />
+                        ) : (
+                            <TextField
+                                labelValue={data.full_name ? data.full_name : '-'}
+                                title={'Full name'}
+                                disable={false}
+                            />
+                        ) }
+                </ScrollView>
                 <View style={styles.bottomContainer}>
                     <Button title={'Back'} onPress={()=>navigation.goBack()} style={styles.button}/>
                 </View>
@@ -102,6 +139,13 @@ const styles = StyleSheet.create({
         height: 150,
         borderRadius: 150/2,
     },
+    disabledLogoContainer: {
+        bottom: '30%',
+        backgroundColor: 'transparent',
+        width: 150,
+        height: 150,
+        borderRadius: 150/2,
+    },
     image:{
         borderRadius: 150/2,
         width: 150,
@@ -111,13 +155,11 @@ const styles = StyleSheet.create({
     bodyContainer: {
         bottom: '28%',
         width: '100%',
-        height: '70%',
+        height: '60%',
         alignItems: 'center',
         justifyContent: 'space-between',
-
     },
     contentContainer: {
-        justifyContent: 'space-between',
         width: '90%',
         height: '90%',
         borderRadius: 10,
@@ -135,6 +177,7 @@ const styles = StyleSheet.create({
     },
     button: {
         width:'100%',
+        height: 50,
         borderRadius: 10,
     }
 })

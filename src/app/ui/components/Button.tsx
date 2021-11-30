@@ -49,6 +49,7 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 0.4,
         shadowRadius: 1,
+        marginTop: 15,
     },
     icon: {
         alignItems: 'center',
