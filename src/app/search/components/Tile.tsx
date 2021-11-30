@@ -1,20 +1,21 @@
 import React from 'react'
 import {TouchableOpacity, Text, StyleSheet, View} from "react-native";
 import LinearGradient from 'react-native-linear-gradient';
-import {GLOBAL_COLORS, GLOBAL_FONTS, GLOBAL_FONTSIZES} from "../../ui/const";
+import {GLOBAL_COLORS, GLOBAL_FONTSIZES} from "../../ui/const";
 import {useNavigation} from "@react-navigation/native";
 
 type Props = {
     title: string
+    id: number
+    user: boolean
 };
 
-const Header = ({title}: Props) => {
+const Header = ({title, id, user}: Props) => {
     const navigation = useNavigation();
-    //console.log(title)
     return(
         <TouchableOpacity
         onPress={()=>{
-            navigation.navigate('User', {title: title});
+            navigation.navigate('User', {title: title, user: user});
         }}
         >
             <LinearGradient
@@ -25,7 +26,17 @@ const Header = ({title}: Props) => {
                 useAngle
             >
                 <View style={styles.headerContainer}>
+                    <View style={styles.textView}>
+                        <Text style={styles.headerText}>
+                            {user ? 'User' : 'Repos'}
+                        </Text>
+                    </View>
+                    <View style={styles.textView}>
                     <Text style={styles.headerText}>{title.toUpperCase()}</Text>
+                    </View>
+                    <View style={styles.textView}>
+                    <Text style={styles.headerText}>{id}</Text>
+                    </View>
                 </View>
             </LinearGradient>
         </TouchableOpacity>
@@ -47,14 +58,23 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.5,
         shadowRadius: 1,
         marginTop: '5%',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     headerContainer:{
+        flexDirection: 'row',
+        justifyContent:'space-between',
+        alignItems: 'center',
         width: '100%',
     },
     headerText:{
         fontSize: GLOBAL_FONTSIZES.header,
         fontWeight: 'bold' as const,
         letterSpacing: 0.09,
+        textAlign: 'center',
+    },
+    textView: {
+        flex:1,
     }
 })
 

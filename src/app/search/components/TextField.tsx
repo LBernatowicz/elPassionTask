@@ -82,7 +82,6 @@ const styles = StyleSheet.create({
         alignItems: 'flex-start',
         justifyContent: 'center',
         left: 5,
-        paddingVertical: 5,
     },
 });
 export default TextField;
