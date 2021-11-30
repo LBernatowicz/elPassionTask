@@ -7,6 +7,5 @@ export const GLOBAL_COLORS = {
     extra: darkMode ? '#11264e' : '#9dcde8',
     text: darkMode ? '#FFFFFF' : '#FFFFFF',
     darkText: darkMode ? '#000000' : '#000000',
-    icon: darkMode ? '#FFFFFF' : '#FFFFFF',
-    darkIcon: darkMode ? '#000000' : '#000000',
+
 };
