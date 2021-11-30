@@ -1,16 +1,17 @@
 import React from 'react'
 import {TouchableOpacity, Text, StyleSheet, View} from "react-native";
 import LinearGradient from 'react-native-linear-gradient';
-import {GLOBAL_COLORS, GLOBAL_FONTS, GLOBAL_FONTSIZES} from "../../ui/const";
+import {GLOBAL_COLORS, GLOBAL_FONTSIZES} from "../../ui/const";
 import {useNavigation} from "@react-navigation/native";
 
 type Props = {
     title: string
+    id: number
+    user: boolean
 };
 
-const Header = ({title}: Props) => {
+const Header = ({title, id}: Props) => {
     const navigation = useNavigation();
-    //console.log(title)
     return(
         <TouchableOpacity
         onPress={()=>{
@@ -26,6 +27,7 @@ const Header = ({title}: Props) => {
             >
                 <View style={styles.headerContainer}>
                     <Text style={styles.headerText}>{title.toUpperCase()}</Text>
+                    <Text style={styles.headerText}>{id}</Text>
                 </View>
             </LinearGradient>
         </TouchableOpacity>

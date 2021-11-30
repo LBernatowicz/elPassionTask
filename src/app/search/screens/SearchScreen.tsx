@@ -8,9 +8,14 @@ import useDebounce from "../../ui/components/Debounce";
 const SearchScreen = () => {
     const [searchData, setSearchData] = useState('');
     const [searchValue, setSearchValue] = useState('');
-    const [usersList, setUserList] = useState([])
-    const [visableData, setVisableData] = useState([])
-    const debouncedSearchValue = useDebounce(searchValue, 5000)
+    const [usersList, setUserList] = useState([]);
+    const [reposList, setReposList] = useState([]);
+    const [visableUserData, setVisableUserData] = useState([]);
+    const [visableReposData, setVisableReposData] = useState([]);
+    const [visableData, setVisableData] = useState([{}])
+    const [isLoadedUsers, setIsLoadedUsers] = useState(false)
+    const [isLoadedRepos, setIsLoadedRepos] = useState(false)
+    const debouncedSearchValue = useDebounce(searchValue, 800)
 
         const getUsers = async () => {
             const url = `https://api.github.com/users?since=1&per_page=100`;
@@ -22,16 +27,16 @@ const SearchScreen = () => {
                 )
                 const json = await response.json();
                 setUserList(json);
-                setVisableData(json);
-
-                console.log(`usersList`, json);
+                setVisableUserData(json);
+                setIsLoadedUsers(true)
+                console.log(json)
             } catch (error) {
                 console.error(error);
             }
         };
 
     const getRepo = async () => {
-        const url = `https://api.github.com/repositories`;
+        const url = `https://api.github.com/repositories?per_page=100`;
         try {
             const response = await fetch(
                 url, {
@@ -39,22 +44,30 @@ const SearchScreen = () => {
                 }
             )
             const json = await response.json();
-            console.log(`repos`, json);
+            setReposList(json)
+            setVisableReposData(json)
+            setIsLoadedRepos(true)
+            console.log(json)
         } catch (error) {
             console.error(error);
         }
     };
 
-    const handleFilter = (baseArray:any, searchType:string, searchText:string) => {
+    const handleFilter = (baseArray:Array<object>, searchType:string, searchText:string, setState: Function) => {
         let data: any = []
-        setVisableData(baseArray.filter((element: any) => {
-            if(element.login.indexOf(searchText.toLowerCase()) !==-1) {
-                data.push(element)
-            }
-           // console.log('tablica filtracji', data)
+        baseArray.filter((element: any) => {
+                if (element[searchType].indexOf(searchText.toLowerCase()) !== -1) {
+                    data.push(element)
+                }
+        })
+        setState(data)
+        //console.log('data', data)
+    }
 
-        }))
+    const handleConcat = (arr1: Array<object>, arr2: Array<object>) => {
+        const data = [...arr1, ...arr2];
         setVisableData(data)
+        console.log('concat', data)
     }
 
     useEffect(() => {
@@ -67,9 +80,16 @@ const SearchScreen = () => {
     }, [])
 
     useEffect(() => {
-        handleFilter(usersList, 'login', searchData);
-        //console.log(visableData)
+         handleConcat(visableUserData, visableReposData);
+    },[isLoadedUsers, isLoadedRepos])
+
+    useEffect(() => {
+        handleFilter(usersList, 'login', searchData, setVisableUserData);
+        handleFilter(reposList, 'name', searchData, setVisableReposData);
+        handleConcat(visableUserData, visableReposData);
+        console.log(visableUserData.length)
     },[searchData])
+
     return (
         <SafeAreaView style={styles.mainContainer}>
             <Header/>
@@ -83,7 +103,7 @@ const SearchScreen = () => {
                         value={searchValue}
                         style={styles.textInput}
                         numberOfLines={1}
-                        placeholder={'Search login or respo'}
+                        placeholder={'Search login or repos'}
                     />
                 </View>
             </View>
@@ -95,7 +115,9 @@ const SearchScreen = () => {
                 >
                     {visableData && visableData.map((item:any) => (
                         <Tile
-                            title={item.login}
+                            title={item.login ? item.login : 'dupa'}
+                            id={item.id}
+                            user={!!item.login }
                         />
                 ))
                 }
