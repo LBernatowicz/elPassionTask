@@ -58,7 +58,6 @@ const SearchScreen = () => {
             }
         })
         setState(data)
-
     }
 
     const handleConcat = (arr1: Array<object>, arr2: Array<object>) => {
