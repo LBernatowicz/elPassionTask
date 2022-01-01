@@ -1,6 +1,0 @@
-module Pods_ElPassionTask_ElPassionTaskTests {
-  umbrella header "Pods-ElPassionTask-ElPassionTaskTests-umbrella.h"
-
-  export *
-  module * { export * }
-}
